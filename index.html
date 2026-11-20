@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>我們這一家｜收納大作戰</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F8F2; --bg2:#EAF1E4; --card:#FFFFFF; --ink:#2F3A30; --sub:#5E6B5F;
+  --green:#3F5546; --leaf:#5C7F55; --mint:#DDE9D5; --line:#D5E0CC;
+  --peach:#E8A87C; --peach2:#FBE9DC; --yellow:#E2B93B; --red:#C0543C; --redbg:#FBE4DE; --warnbg:#FFF4D6;
+  --r:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:linear-gradient(170deg,var(--bg),var(--bg2)) fixed;color:var(--ink);font-family:'Noto Sans TC',system-ui,sans-serif;line-height:1.6}
+button{font:inherit;cursor:pointer;border:none}
+input,textarea,select{font:inherit;color:var(--ink)}
+.wrap{max-width:1180px;margin:0 auto;padding:20px 18px 120px}
+header.top{position:sticky;top:0;z-index:20;background:rgba(246,248,242,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topin{max-width:1180px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{font-family:'Noto Serif TC',serif;font-weight:700;font-size:18px;color:var(--green);white-space:nowrap}
+.steps{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+.step{padding:4px 12px;border-radius:999px;font-size:13px;background:#fff;border:1px solid var(--line);color:var(--sub)}
+.step.on{background:var(--green);color:#fff;border-color:var(--green)}
+.step.done{background:var(--mint);color:var(--green);border-color:var(--mint)}
+.timer{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 6px 4px 14px}
+.timer b{font-variant-numeric:tabular-nums;font-size:18px;min-width:56px;text-align:center}
+.timer.low b{color:var(--red)}
+.tbtn{background:var(--mint);color:var(--green);border-radius:999px;padding:3px 10px;font-size:13px}
+h1{font-family:'Noto Serif TC',serif;font-size:clamp(34px,6vw,60px);line-height:1.2;color:var(--green)}
+h2{font-family:'Noto Serif TC',serif;font-size:clamp(24px,3.6vw,34px);color:var(--green);line-height:1.3}
+h3{font-size:19px;color:var(--green)}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:3px;color:var(--leaf)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.muted{color:var(--sub)}
+.btn{background:var(--green);color:#fff;border-radius:999px;padding:12px 26px;font-weight:700;font-size:16px;transition:.15s}
+.btn:hover{background:#2f4337}
+.btn:disabled{background:#B8C4B6;cursor:not-allowed}
+.btn.ghost{background:#fff;color:var(--green);border:1.5px solid var(--green)}
+.btn.peach{background:var(--peach);color:#3b2416}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.grid{display:grid;gap:16px}
+.screen{display:none;animation:fade .35s ease}
+.screen.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.mission-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin:10px 0 18px}
+.goal{background:var(--peach2);border-radius:14px;padding:12px 16px;font-size:15px}
+.goal b{color:#8a4a24}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:26px;flex-wrap:wrap}
+
+/* intro */
+.hero{display:grid;grid-template-columns:1.3fr 1fr;gap:28px;align-items:center;margin-top:18px}
+.stats{display:flex;gap:14px;margin:22px 0}
+.stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 18px;text-align:center;min-width:96px}
+.stat b{display:block;font-size:34px;font-family:'Noto Serif TC',serif;color:var(--leaf);line-height:1.1}
+.bubbles{display:grid;gap:10px}
+.bub{background:#fff;border:1px solid var(--line);border-radius:18px 18px 18px 4px;padding:10px 16px;font-size:15px;opacity:0;transform:translateY(8px);animation:pop .45s forwards}
+.bub span{font-weight:700;color:var(--green);margin-right:6px}
+@keyframes pop{to{opacity:1;transform:none}}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:18px}
+.rule{background:#fff;border-left:5px solid var(--leaf);border-radius:12px;padding:12px 14px;font-size:15px}
+
+/* roles */
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.flip{perspective:1000px;min-height:340px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;min-height:340px;transition:transform .6s;transform-style:preserve-3d}
+.flip.open .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--r);padding:18px;display:flex;flex-direction:column}
+.front{background:var(--green);color:#fff;align-items:center;justify-content:center;text-align:center;gap:8px}
+.front .emo{font-size:64px}
+.front small{opacity:.8}
+.back{background:#fff;border:2px solid var(--line);transform:rotateY(180deg);gap:6px;font-size:14px;overflow:auto}
+.back .tag{font-size:12px;font-weight:700;color:#fff;border-radius:999px;padding:2px 10px;align-self:flex-start}
+.back h4{font-size:17px;color:var(--ink)}
+.back .must{background:var(--redbg);border-radius:10px;padding:6px 10px}
+.back .line{font-style:italic;color:var(--sub);margin-top:auto}
+.spoke{margin-top:8px;display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--green)}
+.spoke input{width:18px;height:18px;accent-color:var(--leaf)}
+.conf{display:grid;gap:10px;margin-top:10px}
+.confrow{display:grid;grid-template-columns:130px 22px 130px 1fr;gap:8px;align-items:center}
+.confrow select,.confrow input,textarea,.inp{border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;background:#fff;width:100%}
+textarea{min-height:70px;resize:vertical}
+.reveal{margin-top:12px;background:var(--mint);border-radius:14px;padding:12px 16px;display:none}
+.reveal.on{display:block}
+
+/* plan */
+.m2{display:grid;grid-template-columns:1fr 330px;gap:18px;align-items:start}
+.plan{background:#FBFAF5;border:3px solid #C9B79C;border-radius:14px;padding:14px;display:grid;grid-template-columns:minmax(160px,1fr) 34px minmax(320px,2.4fr);gap:10px;position:relative}
+.zone{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px}
+.zone h4{font-size:14px;color:var(--green);display:flex;justify-content:space-between;gap:6px;margin-bottom:6px}
+.zone h4 small{font-weight:400;color:var(--sub);font-size:12px}
+.walk-v{border-left:4px dashed var(--yellow);border-right:4px dashed var(--yellow);border-radius:4px;background:repeating-linear-gradient(180deg,transparent 0 14px,rgba(226,185,59,.12) 14px 28px);display:flex;align-items:center;justify-content:center}
+.walk-v span{writing-mode:vertical-rl;font-size:12px;color:#9c7a12;letter-spacing:4px}
+.walk-h{grid-column:1/-1;height:26px;border-top:4px dashed var(--yellow);border-bottom:4px dashed var(--yellow);display:flex;align-items:center;justify-content:center;font-size:12px;color:#9c7a12;letter-spacing:4px}
+.living{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.entry{display:flex;flex-direction:column;gap:10px}
+.slots{display:grid;gap:6px}
+.s2{grid-template-columns:repeat(2,1fr)}
+.s3{grid-template-columns:repeat(3,1fr)}
+.s4{grid-template-columns:repeat(4,1fr)}
+.shelfrow{font-size:11px;color:var(--sub);margin:4px 0 2px}
+.slot{min-height:62px;border:2px dashed #C6D3BE;border-radius:10px;background:#F7FAF4;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;color:#9AA89A;padding:3px;text-align:center;transition:.12s;position:relative}
+.slot.target{border-color:var(--leaf);background:#EAF4E4;color:var(--leaf)}
+.slot.target:hover{background:#DCEFD2}
+.slot.nope{opacity:.45}
+.slot.filled{border-style:solid;background:#fff;color:var(--ink)}
+.slot.blocked{background:repeating-linear-gradient(45deg,#F4EDE6 0 8px,#FBF6F1 8px 16px);border-color:#E4C7B5}
+.slot .e{font-size:22px;line-height:1.1}
+.slot .n{font-size:11px;font-weight:700;line-height:1.25}
+.slot.bad{border-color:var(--red);background:var(--redbg)}
+.slot.warn{border-color:var(--yellow);background:var(--warnbg)}
+.slot.sel{outline:3px solid var(--peach);outline-offset:1px}
+.shoe{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.shoe div{background:#F1ECE3;border-radius:6px;text-align:center;font-size:15px;padding:3px 0}
+.door{font-size:12px;color:var(--sub);text-align:center;border-top:6px solid #C9B79C;padding-top:4px;margin-top:auto}
+.furn{background:#F3EEE6;border:1.5px dashed #CDBFA8;border-radius:12px;padding:10px;font-size:13px;color:#7a6a55;display:flex;flex-direction:column;gap:6px;justify-content:center;text-align:center}
+.furn b{color:#5c4d3a}
+.tray-wrap{position:sticky;top:70px;display:grid;gap:14px}
+.tray{display:flex;flex-wrap:wrap;gap:6px;max-height:330px;overflow:auto;padding:2px}
+.chip{display:flex;align-items:center;gap:6px;background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:4px 10px 4px 6px;font-size:13px;text-align:left}
+.chip .e{font-size:18px}
+.chip.sel{border-color:var(--peach);background:var(--peach2);box-shadow:0 0 0 3px rgba(232,168,124,.35)}
+.chip small{color:var(--sub);font-size:11px;display:block;line-height:1.2}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:none}
+.hint{font-size:13px;color:var(--sub);background:var(--mint);border-radius:10px;padding:8px 12px}
+.checks{display:grid;gap:6px;font-size:13px}
+.ck{display:flex;gap:8px;align-items:flex-start;padding:6px 10px;border-radius:10px;background:#F7FAF4}
+.ck.bad{background:var(--redbg)}
+.ck.warn{background:var(--warnbg)}
+.ck.ok{background:#E6F2DF}
+.ck i{font-style:normal;flex:none}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--sub)}
+.legend span{display:flex;align-items:center;gap:4px}
+.hard3{display:flex;flex-wrap:wrap;gap:6px}
+.hard3 button{background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:3px 10px;font-size:13px}
+.hard3 button.on{background:var(--peach);border-color:var(--peach);color:#3b2416;font-weight:700}
+.reasons{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+
+/* event */
+.event{max-width:680px;margin:20px auto;background:#fff;border:3px solid var(--red);border-radius:24px;padding:30px;text-align:center;box-shadow:0 20px 50px rgba(192,84,60,.15)}
+.event .siren{font-size:64px;animation:shake 1s infinite}
+@keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.sealed{max-width:520px;margin:40px auto;text-align:center}
+.envelope{font-size:110px;cursor:pointer;transition:.2s;display:inline-block}
+.envelope:hover{transform:scale(1.06) rotate(-3deg)}
+.diff{display:grid;gap:6px;font-size:14px}
+.diff div{background:#F7FAF4;border-radius:10px;padding:6px 10px}
+
+/* finale */
+.sentence{font-size:clamp(18px,2.4vw,24px);line-height:2.2;font-family:'Noto Serif TC',serif}
+.sentence input{border:none;border-bottom:3px solid var(--peach);background:transparent;font-size:inherit;font-family:'Noto Sans TC',sans-serif;padding:0 6px;width:min(340px,80%)}
+.ltable{width:100%;border-collapse:separate;border-spacing:0 8px}
+.ltable td{background:#fff;padding:12px 16px;font-size:15px}
+.ltable td:first-child{border-radius:12px 0 0 12px;width:50%}
+.ltable td:last-child{border-radius:0 12px 12px 0;font-weight:700;color:var(--green)}
+.ltable tr{opacity:0;transform:translateX(-10px);transition:.4s}
+.ltable tr.on{opacity:1;transform:none}
+.bigq{text-align:center;padding:60px 20px}
+.bigq h1{font-size:clamp(30px,5vw,54px);max-width:900px;margin:0 auto 20px}
+.sumtbl{width:100%;border-collapse:collapse;font-size:14px}
+.sumtbl th,.sumtbl td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.sumtbl th{background:var(--mint);color:var(--green)}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(30px);background:var(--green);color:#fff;padding:10px 20px;border-radius:999px;opacity:0;transition:.3s;z-index:50;font-size:15px}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.confetti{position:fixed;top:-20px;font-size:24px;z-index:60;animation:fall linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+.steplist{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 18px 14px 40px;margin-bottom:14px;display:grid;gap:6px;font-size:15px}
+.steplist li::marker{color:var(--leaf);font-weight:700}
+.redtxt{color:var(--red);font-weight:700}
+.howrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:10px}
+.how{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:14px;color:var(--sub)}
+.how b{display:block;color:var(--green);font-size:16px}
+.guide{position:sticky;top:64px;z-index:15;background:var(--green);color:#fff;border-radius:14px;padding:12px 18px;font-size:16px;margin-bottom:12px;box-shadow:0 6px 18px rgba(47,58,48,.18)}
+.guide b{color:#FFE2C8}
+.modal{position:fixed;inset:0;background:rgba(30,40,32,.45);z-index:70;display:none;align-items:center;justify-content:center;padding:16px}
+.modal.on{display:flex}
+.mbox{background:var(--bg);border-radius:22px;padding:24px;max-width:620px;width:100%;max-height:90vh;overflow:auto}
+@media (max-width:900px){
+  .guide{top:56px;font-size:15px}
+  .hero,.m2{grid-template-columns:1fr}
+  .tray-wrap{position:static}
+  .step:not(.on){display:none}
+  .topin{gap:8px}
+  .tray-wrap>.card:first-child{position:fixed;left:8px;right:8px;bottom:8px;z-index:30;box-shadow:0 -6px 24px rgba(47,58,48,.18)}
+  .tray-wrap .tray{max-height:24vh}
+  .m2{padding-bottom:36vh}
+  .plan{grid-template-columns:1fr;}
+  .walk-v{height:24px;border:none;border-top:4px dashed var(--yellow);border-bottom:4px dashed var(--yellow)}
+  .walk-v span{writing-mode:horizontal-tb}
+  .confrow{grid-template-columns:1fr 1fr}
+  .confrow .x{display:none}
+  .confrow input{grid-column:1/-1}
+}
+.photo{width:1180px;background:linear-gradient(160deg,#F6F8F2,#EAF1E4);border:1px solid var(--line);border-radius:24px;padding:30px 34px;margin:0 auto}
+.photo .ph-top{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:16px}
+.photo .ph-top h1{font-size:40px}
+.photo .ph-pr{background:#fff;border-radius:16px;padding:14px 20px;font-family:'Noto Serif TC',serif;font-size:21px;line-height:1.6;margin-bottom:14px;border-left:6px solid var(--peach)}
+.photo .plan{grid-template-columns:minmax(160px,1fr) 34px minmax(320px,2.4fr)!important}
+.photo .walk-v{border-top:none!important;border-bottom:none!important;height:auto!important;border-left:4px dashed var(--yellow)!important;border-right:4px dashed var(--yellow)!important}
+.photo .walk-v span{writing-mode:vertical-rl!important}
+.photo .living{grid-template-columns:1fr 1fr!important}
+.photo .ph-roles{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.photo .ph-role{flex:1;min-width:150px;background:#fff;border-radius:14px;padding:10px 12px;font-size:13px}
+.photo .ph-role b{display:block;font-size:15px}
+@media print{header.top,.foot,.btn{display:none!important}.screen{display:none!important}#s-summary{display:block!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="topin">
+  <div class="brand">🏠 我們這一家</div>
+  <div class="steps" id="steps"></div>
+  <button class="tbtn" id="helpBtn" style="padding:6px 14px;font-size:14px">❓ 玩法說明</button>
+  <div class="timer" id="timer" style="display:none"><span id="tlabel" style="font-size:13px;color:var(--sub)"></span><b id="tval">00:00</b><button class="tbtn" id="tgo">開始</button><button class="tbtn" id="treset">重設</button></div>
+</div></header>
+
+<div class="wrap">
+
+<!-- INTRO -->
+<section class="screen" id="s-intro">
+  <div class="hero">
+    <div>
+      <p class="eyebrow">FINAL MISSION・五個人的需求，一個家的空間</p>
+      <h1>我們這一家<br>收納大作戰</h1>
+      <div class="stats">
+        <div class="stat"><b>30</b>分鐘</div>
+        <div class="stat"><b>5</b>個家庭角色</div>
+        <div class="stat"><b>1</b>個共用空間</div>
+      </div>
+      <p class="muted">五個家人住在同一個家，最近大家都對客廳有意見。全家決定召開一場<b style="color:var(--red)">家庭收納緊急會議</b>：用現有家具重新安排玄關與客廳的共用物品，讓五個人都方便使用，也能自己把東西收回去。</p>
+      <div class="row" style="margin-top:22px"><button class="btn" data-go="m1">召開家庭會議 →</button><span class="muted" style="font-size:14px">每組 4～5 人，共用一台平板或電腦</span></div>
+    </div>
+    <div class="bubbles" id="bubbles"></div>
+  </div>
+  <h3 style="margin-top:34px">🗺️ 闖關路線</h3>
+  <div class="howrow">
+    <div class="how"><b>01 家庭會議</b>每人扮演一位家人，說出自己的需求</div>
+    <div class="how"><b>02 空間爭奪戰</b>把 19 組物品放進家裡的櫃子和掛鉤</div>
+    <div class="how"><b>03 突發事件</b>家裡出事了！調整你們的安排</div>
+    <div class="how"><b>04 發表</b>用一句話說出你們的收納原則</div>
+    <div class="how"><b>📸 截圖</b>把收納後的家存成圖片</div>
+  </div>
+  <h3 style="margin-top:28px">遊戲規則：同一個空間，不能擴建！</h3>
+  <div class="rules">
+    <div class="rule">🚫 不能購買新家具、不能擴充櫃體</div>
+    <div class="rule">🟨 黃色虛線是主要通道，不能擺放物品</div>
+    <div class="rule">🪑 共用桌與茶几只能暫放，不能當固定收納區</div>
+    <div class="rule">🛋️ 只安排共用區域，個人房間不在範圍內</div>
+  </div>
+</section>
+
+<!-- M1 -->
+<section class="screen" id="s-m1">
+  <div class="mission-head">
+    <div><p class="eyebrow">MISSION 01・5 分鐘</p><h2>家庭會議：先聽每個人想說什麼</h2></div>
+    <div class="goal"><b>過關條件：</b>每位家庭成員都發言，並找出至少兩項需求衝突。</div>
+  </div>
+  <ol class="steplist">
+    <li><b>分角色：</b>每人選一張卡，<b>點卡片</b>翻到背面，讀自己的角色。</li>
+    <li><b>輪流發言：</b>用 30 秒介紹「我」的習慣，最後大聲說出<span class="redtxt">「不能妥協」</span>那一句。</li>
+    <li><b>打勾：</b>說完的人，勾選卡片下方的 <b>☑ 已發言</b>。</li>
+    <li><b>找衝突：</b>在最下面選出「誰 ↔ 誰」的需求打架了，寫下原因，至少兩項。</li>
+  </ol>
+  <div class="roles" id="roles"></div>
+  <div class="card" style="margin-top:20px">
+    <h3>🔥 我們發現的需求衝突</h3>
+    <p class="muted" style="font-size:14px">選出誰和誰的需求打架了，並寫下衝突在哪裡（至少兩項）。</p>
+    <div class="conf" id="conf"></div>
+    <div class="row" style="margin-top:10px"><button class="btn ghost" id="addConf" style="padding:6px 16px;font-size:14px">＋ 再加一項</button><button class="btn ghost" id="peek" style="padding:6px 16px;font-size:14px">看看常見衝突</button></div>
+    <div class="reveal" id="peekBox">
+      <b>其他組常找到的衝突：</b><br>
+      • 奶奶 ↔ 妹妹：都需要低處、好拿的位置<br>
+      • 爸爸 ↔ 哥哥：都要用共用桌，也共用充電器<br>
+      • 媽媽 ↔ 全家：出門用品很多，但掛鉤只有 4 個<br>
+      • 哥哥 ↔ 想要整齊的人：模型想展示，但開放書架容易看起來亂
+    </div>
+  </div>
+  <div class="foot"><button class="btn ghost" data-go="intro">← 回故事</button><span class="muted" id="m1msg" style="font-size:14px"></span><button class="btn" id="m1next" disabled>進入空間爭奪戰 →</button></div>
+</section>
+
+<!-- M2 -->
+<section class="screen" id="s-m2">
+  <div class="mission-head">
+    <div><p class="eyebrow">MISSION 02・10 分鐘</p><h2>空間爭奪戰：讓每組物品都有自己的家</h2></div>
+    <div class="goal"><b>過關條件：</b>所有物品都有固定位置、沒有違反「不能妥協」，並選出最難安排的三組物品。</div>
+  </div>
+  <ol class="steplist">
+    <li><b>拿物品：</b>點一張<b>物品卡</b>（電腦在右邊，手機在畫面下方），卡片會變成橘色。</li>
+    <li><b>放進去：</b>平面圖上會亮起<b style="color:var(--leaf)">綠色空格</b>，點一格就放進去了。</li>
+    <li><b>想換位置：</b>點平面圖上已經放好的物品，再點別的空格就能搬家；點另一個物品就會互換。</li>
+    <li><b>聽家人的心聲：</b>出現 ❌ 紅燈一定要改；⚠️ 黃燈可以留，但發表時要說出理由。</li>
+  </ol>
+  <div class="guide" id="guide2"></div>
+  <div class="m2">
+    <div>
+      <div class="plan" id="plan"></div>
+      <div class="legend" style="margin-top:8px">
+        <span><i class="dot" style="background:var(--red)"></i>違反不能妥協</span>
+        <span><i class="dot" style="background:var(--yellow)"></i>可以，但要說得出理由</span>
+        <span>🟩 綠框＝可以放　▨ 淡色＝這格不能放這個物品</span>
+      </div>
+    </div>
+    <div class="tray-wrap">
+      <div class="card" style="padding:14px">
+        <div class="row" style="justify-content:space-between"><h3>📦 物品卡</h3><span class="muted" id="left" style="font-size:13px"></span></div>
+        <div class="tray" id="tray" style="margin-top:8px"></div>
+        <button class="btn ghost" id="unplace" style="display:none;margin-top:8px;padding:6px 14px;font-size:13px">↩ 放回物品區</button>
+      </div>
+      <div class="card" style="padding:14px">
+        <h3 style="margin-bottom:6px">🧑‍🤝‍🧑 家人的心聲</h3>
+        <div class="checks" id="checks"></div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:18px">
+    <h3>最難安排的三組物品是？</h3>
+    <div class="hard3" id="hard3" style="margin:8px 0 14px"></div>
+    <h3>各區的安排理由（簡短寫即可）</h3>
+    <div class="reasons" id="reasons" style="margin-top:8px"></div>
+  </div>
+  <div class="foot"><button class="btn ghost" data-go="m1">← 家庭會議</button><span class="muted" id="m2msg" style="font-size:14px"></span><button class="btn" id="m2next" disabled>完成規劃，等待家中消息… →</button></div>
+</section>
+
+<!-- M3 -->
+<section class="screen" id="s-m3">
+  <div class="mission-head">
+    <div><p class="eyebrow">MISSION 03・5 分鐘</p><h2>家庭突發事件：原本的規劃可能要改了！</h2></div>
+    <div class="goal"><b>過關條件：</b>不增加家具，至少調整兩項安排，並說明哪些家人要配合改變習慣。</div>
+  </div>
+  <div id="sealed" class="sealed">
+    <div class="envelope" id="envelope">✉️</div>
+    <p class="muted">家裡好像發生了什麼事……<br><b>等老師說「公布事件」</b>，再點信封打開。</p>
+  </div>
+  <div id="eventArea" style="display:none">
+    <div class="event">
+      <div class="siren">🚨</div>
+      <h2 style="color:var(--red)">事件：奶奶受傷了！</h2>
+      <p style="font-size:17px;margin-top:10px">奶奶最近需要暫時使用<b>助行器</b>，走動時需要更寬的通道。<br>她也<b>不能彎腰拿取低櫃最底層</b>的物品。</p>
+      <p class="muted" style="margin-top:10px;font-size:14px">低櫃下層已標示為斜線區：奶奶的物品不能放在那裡。</p>
+    </div>
+    <ol class="steplist">
+      <li><b>找問題：</b>看「家人的心聲」，哪些物品變成 ❌ 紅燈了？</li>
+      <li><b>搬家：</b>點平面圖上的物品，再點新位置；點另一個物品可以互換。</li>
+      <li><b>至少改兩項：</b>「調整前後」會自動記錄你們改了什麼。</li>
+      <li><b>寫下來：</b>在最下面寫出哪位家人要配合、改變什麼習慣。</li>
+    </ol>
+    <div class="guide" id="guide3"></div>
+    <div class="m2" style="margin-top:10px">
+      <div><div class="plan" id="plan3"></div></div>
+      <div class="tray-wrap">
+        <div class="card" style="padding:14px">
+          <h3>📦 物品卡</h3>
+          <div class="tray" id="tray3" style="margin-top:8px"></div>
+          <button class="btn ghost" id="unplace3" style="display:none;margin-top:8px;padding:6px 14px;font-size:13px">↩ 放回物品區</button>
+        </div>
+        <div class="card" style="padding:14px"><h3>🔁 調整前後</h3><div class="diff" id="diff" style="margin-top:6px"></div></div>
+        <div class="card" style="padding:14px"><h3 style="margin-bottom:6px">🧑‍🤝‍🧑 家人的心聲</h3><div class="checks" id="checks3"></div></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>哪些家人需要配合改變習慣？改變什麼？</h3>
+      <textarea id="habit" placeholder="例如：妹妹的繪本搬到低櫃下層，她要學會放回新位置……"></textarea>
+    </div>
+  </div>
+  <div class="foot"><button class="btn ghost" data-go="m2">← 空間爭奪戰</button><span class="muted" id="m3msg" style="font-size:14px"></span><button class="btn" id="m3next" disabled>準備發表 →</button></div>
+</section>
+
+<!-- M4 -->
+<section class="screen" id="s-m4">
+  <div class="mission-head">
+    <div><p class="eyebrow">MISSION 04・5 分鐘</p><h2>收納方案發表</h2></div>
+    <div class="goal"><b>怎麼做：</b>在底線上填空，完成一句話；再寫下最難的一個決定。上台時就照著念！</div>
+  </div>
+  <div class="card">
+    <p class="sentence">我們這一家最重要的收納原則是<input id="pr1" placeholder="＿＿＿＿＿">，<br>因為<input id="pr2" placeholder="＿＿＿＿＿">。</p>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <h3>最困難的一項家庭協商決定</h3>
+    <textarea id="hardest" placeholder="誰讓了步？讓了什麼？為什麼最後大家都能接受？"></textarea>
+  </div>
+  <div class="foot"><button class="btn ghost" data-go="m3">← 突發事件</button><span></span><button class="btn" id="m4next">看我們的成果 →</button></div>
+</section>
+
+<!-- SUMMARY -->
+<section class="screen" id="s-summary">
+  <div class="mission-head"><div><p class="eyebrow">OUR PLAN・小組成果</p><h2>我們這一家的收納規劃表</h2></div>
+    <div class="row"><button class="btn ghost" id="copy" style="padding:8px 18px;font-size:14px">📋 複製文字</button><button class="btn ghost" onclick="window.print()" style="padding:8px 18px;font-size:14px">🖨 列印</button></div></div>
+  <div class="card" id="summary"></div>
+  <div class="foot"><button class="btn ghost" data-go="m4">← 發表</button><span></span><button class="btn" data-go="final">最後想一想 →</button></div>
+</section>
+
+<!-- FINAL -->
+<section class="screen" id="s-final">
+  <div class="bigq">
+    <p class="eyebrow" style="margin-bottom:18px">最後想一想</p>
+    <h1>如果房間很整齊，<br>卻沒有人覺得好用，<br>這算是好的收納嗎？</h1>
+    <p class="muted" style="font-size:19px">收納不只是讓物品有位置，而是讓每個人的生活需求都能被看見。<br>回家看看：你家的玄關或客廳，有誰的需求一直沒被看見？</p>
+    <div class="row" style="justify-content:center;margin-top:30px"><button class="btn ghost" data-go="summary">← 上一步</button><button class="btn" data-go="photo">📸 最後一步：成果截圖 →</button></div>
+    <div class="row" style="justify-content:center;margin-top:14px"><button class="btn ghost" id="resetAll" style="padding:6px 16px;font-size:14px">🔄 重新開始（下一組）</button></div>
+  </div>
+</section>
+
+<!-- PHOTO -->
+<section class="screen" id="s-photo">
+  <div class="mission-head"><div><p class="eyebrow">FINAL・留下我們這一家</p><h2>📸 成果截圖：把收納後的家拍下來</h2></div>
+    <div class="goal">填上組名，按「下載成果圖」存成圖片（手機也適用），或直接截圖這張卡片。</div></div>
+  <div class="row" style="margin-bottom:14px">
+    <input class="inp" id="gname" placeholder="我們是第＿組／組名" style="max-width:280px">
+    <button class="btn" id="shot">⬇️ 下載成果圖</button>
+    <button class="btn ghost" data-go="final" style="padding:10px 20px">← 回上一步</button>
+  </div>
+  <div style="overflow:auto"><div id="photoCard" class="photo"></div></div>
+  <div id="shotOut" class="card" style="display:none;margin-top:16px;text-align:center">
+    <p class="muted" style="margin-bottom:8px">如果沒有自動下載：<b>長按（或按右鍵）下方圖片 → 儲存圖片</b></p>
+    <img id="shotImg" style="max-width:100%;border-radius:12px;border:1px solid var(--line)">
+  </div>
+</section>
+
+</div>
+<div class="toast" id="toast"></div>
+<div class="modal" id="help"><div class="mbox">
+  <h2>❓ 玩法說明</h2>
+  <ol class="steplist" style="margin-top:12px">
+    <li><b>上方的進度列</b>顯示你們在第幾關，右邊有<b>計時器</b>，按「開始」倒數。</li>
+    <li>每一關都有<b>過關條件</b>（粉橘色框）。還沒達成時，最下面的按鈕是灰色的，旁邊的文字會告訴你還差什麼。</li>
+    <li><b>放物品：</b>先點物品卡 → 再點綠色空格。</li>
+    <li><b>移動物品：</b>點已放好的物品 → 再點新空格；點另一個物品就是互換。</li>
+    <li><b>拿回物品：</b>點已放好的物品 → 按「↩ 放回物品區」。</li>
+    <li><b>紅燈 ❌</b>是家人絕對不能接受，一定要改；<b>黃燈 ⚠️</b>可以保留，但要說得出理由。</li>
+    <li>寫的內容會自動儲存，不小心重新整理也不會不見。</li>
+  </ol>
+  <div class="row" style="justify-content:flex-end;margin-top:16px"><button class="btn" id="helpClose">我知道了</button></div>
+</div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+const ROLES={
+  grandma:{name:'阿梅奶奶',who:'奶奶',age:72,emo:'👵',color:'#B0705A',title:'方便比漂亮重要！',
+    desc:'膝蓋不舒服，蹲下、彎腰或拿高處東西不方便。每天喜歡坐在沙發上看書、做手工。',
+    need:'老花眼鏡、常看的書、手工材料要容易拿取。',must:'經常使用的物品不能放在高櫃或最底層；主要通道必須保持暢通。',line:'「我不想每次找個眼鏡，還要麻煩你們！」'},
+  dad:{name:'阿哲爸爸',who:'爸爸',age:45,emo:'👨‍💻',color:'#4A6C8C',title:'我的桌子不是倉庫！',
+    desc:'每週有三天在家工作，需要使用客廳的共用桌開線上會議。',
+    need:'筆電、工作資料、充電器需要容易取用。',must:'工作時間桌面不能堆放其他人的物品，也不能因整理而找不到工作資料。',line:'「我開會前最怕的就是找不到充電器！」'},
+  mom:{name:'小芸媽媽',who:'媽媽',age:43,emo:'👩',color:'#C0543C',title:'出門不要再上演尋寶記！',
+    desc:'輪班工作，經常趕時間出門，最困擾大家把鑰匙、雨傘和外出用品亂放。',
+    need:'出門必備物品要容易確認與拿取。',must:'家門鑰匙必須有全家知道的固定位置，不能每個人隨手放。',line:'「我不要求你們整理得漂亮，只求出門不要遲到！」'},
+  bro:{name:'阿凱哥哥',who:'哥哥',age:14,emo:'🧑‍🎨',color:'#6E5A9C',title:'不要動我的收藏！',
+    desc:'喜歡畫畫、看漫畫與收集模型，放學後經常在客廳寫作業。',
+    need:'書包、漫畫和畫具要有固定位置，模型希望展示。',must:'收藏品不能未經同意就被丟掉；需要保有一小塊展示空間。',line:'「那些不是垃圾，是我的寶貝！」'},
+  sis:{name:'小米妹妹',who:'妹妹',age:7,emo:'👧',color:'#D08A1E',title:'我也想要自己收！',
+    desc:'喜歡在客廳玩積木、畫畫，但常常不知道東西應該放回哪裡。',
+    need:'積木、繪本與美術用品要能自己拿取、自己歸位。',must:'玩具不能放在拿不到的高處；收納分類不能太複雜。',line:'「我真的有想整理，只是我不知道要收去哪裡！」'}
+};
+const ROLE_KEYS=['grandma','dad','mom','bro','sis'];
+const ITEMS={
+ '02':{n:'媽媽的外套',e:'🧥',o:'mom',f:'每天',hook:1},
+ '03':{n:'爸爸的背包',e:'💼',o:'dad',f:'每天',hook:1},
+ '04':{n:'哥哥的書包',e:'🎒',o:'bro',f:'每天',hook:1},
+ '05':{n:'全家共用雨傘',e:'☂️',o:'all',f:'雨天',hook:1},
+ '06':{n:'鑰匙與門禁卡',e:'🔑',o:'all',f:'每天',hook:1},
+ '07':{n:'奶奶的老花眼鏡',e:'👓',o:'grandma',f:'每天'},
+ '08':{n:'奶奶常看的書',e:'📖',o:'grandma',f:'每天'},
+ '09':{n:'奶奶的手工材料',e:'🧶',o:'grandma',f:'每週數次'},
+ '10':{n:'爸爸的筆電',e:'💻',o:'dad',f:'工作日'},
+ '11':{n:'爸爸的工作文件',e:'📁',o:'dad',f:'工作日'},
+ '12':{n:'充電器與傳輸線',e:'🔌',o:'all',f:'每天',who:'爸爸、哥哥'},
+ '13':{n:'哥哥的漫畫',e:'📚',o:'bro',f:'每天'},
+ '14':{n:'哥哥的畫具',e:'🎨',o:'bro',f:'每週數次'},
+ '15':{n:'哥哥的模型收藏',e:'🤖',o:'bro',f:'展示'},
+ '16':{n:'妹妹的積木',e:'🧱',o:'sis',f:'每天'},
+ '17':{n:'妹妹的繪本',e:'📕',o:'sis',f:'每天'},
+ '18':{n:'妹妹的美術用品',e:'🖍️',o:'sis',f:'每週數次'},
+ '19':{n:'備用衛生紙',e:'🧻',o:'all',f:'偶爾補充'},
+ '20':{n:'節慶裝飾品',e:'🎄',o:'all',f:'每年數次'}
+};
+const OWNER_COLOR=o=>o==='all'?'#7A8B7B':ROLES[o].color;
+const OWNER_NAME=(id)=>{const it=ITEMS[id];return it.who||(it.o==='all'?'全家':ROLES[it.o].who)};
+const DAILY=['02','03','04','05','06','07','08','10','11','12','13','16','17'];
+// slots
+const SLOTS=[];
+for(let i=1;i<=4;i++)SLOTS.push({id:'A'+i,z:'A',label:'掛鉤 '+i});
+for(let i=1;i<=6;i++)SLOTS.push({id:'B'+i,z:'B',label:(i<=3?'上層 ':'下層 ')+i,low:i>3});
+for(let i=1;i<=6;i++)SLOTS.push({id:'C'+i,z:'C',label:(i<=3?'上排 ':'下排 ')+i});
+for(let i=1;i<=4;i++)SLOTS.push({id:'D'+i,z:'D',label:'高處 '+i});
+const ZNAME={A:'A 玄關（掛鉤）',B:'B 客廳低櫃',C:'C 開放式書架',D:'D 高櫃'};
+
+const KEY='ourfamily-v1';
+let S={screen:'intro',spoke:{},conf:[{a:'',b:'',t:''},{a:'',b:'',t:''}],place:{},hard:[],reasons:{A:'',B:'',C:'',D:''},
+  snap:null,eventOpen:false,place3:null,habit:'',pr1:'',pr2:'',hardest:'',done:{},rows:0};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s)S=Object.assign(S,s)}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const $=id=>document.getElementById(id);
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2200)}
+function confetti(){const em=['🌿','🍃','✨','🏠','🔑','🧺'];for(let i=0;i<36;i++){const c=document.createElement('div');c.className='confetti';c.textContent=em[i%em.length];c.style.left=Math.random()*100+'vw';c.style.animationDuration=(2+Math.random()*2)+'s';c.style.animationDelay=Math.random()*.6+'s';document.body.appendChild(c);setTimeout(()=>c.remove(),4800)}}
+
+/* navigation */
+const ORDER=[['intro','故事'],['m1','01 家庭會議'],['m2','02 空間爭奪'],['m3','03 突發事件'],['m4','04 發表'],['summary','成果'],['final','想一想'],['photo','📸 成果截圖']];
+const TIMES={m1:5,m2:10,m3:5,m4:5};
+function go(s){S.screen=s;save();document.querySelectorAll('.screen').forEach(e=>e.classList.toggle('on',e.id==='s-'+s));renderSteps();setTimer(s);
+  if(s==='m2'){renderM2();if(!S.seenHelp){S.seenHelp=1;save();setTimeout(()=>$('help').classList.add('on'),400)}}if(s==='m3')renderM3();if(s==='summary')renderSummary();if(s==='photo'){$('gname').value=S.gname||'';renderPhoto();$('shotOut').style.display='none'}window.scrollTo({top:0,behavior:'smooth'})}
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g)go(g.dataset.go)});
+function renderSteps(){$('steps').innerHTML=ORDER.map(([k,l])=>`<span class="step ${k===S.screen?'on':S.done[k]?'done':''}">${l}</span>`).join('')}
+
+/* timer */
+let T={left:0,run:false,h:null,key:''};
+function setTimer(s){const m=TIMES[s];if(!m){$('timer').style.display='none';stopT();return}
+  $('timer').style.display='flex';if(T.key!==s){stopT();T.key=s;T.left=m*60;$('tlabel').textContent='建議 '+m+' 分';}drawT()}
+function drawT(){const m=Math.floor(T.left/60),s=T.left%60;$('tval').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');$('timer').classList.toggle('low',T.left<=60);$('tgo').textContent=T.run?'暫停':'開始'}
+function stopT(){T.run=false;clearInterval(T.h);drawT()}
+$('tgo').onclick=()=>{if(T.run){stopT();return}T.run=true;T.h=setInterval(()=>{if(T.left>0){T.left--;drawT()}else{stopT();toast('⏰ 時間到！請準備收尾')}},1000);drawT()};
+$('treset').onclick=()=>{stopT();T.left=(TIMES[T.key]||5)*60;drawT()};
+
+/* intro */
+function renderIntro(){const lines=[['爸爸','拜託！不要再把東西堆在我的工作桌上！'],['媽媽','每天出門都找不到鑰匙，到底是誰亂放？'],['奶奶','我只是想拿個東西，怎麼每次都要蹲下來找？'],['哥哥','那是我的東西！為什麼每次都被收走？'],['妹妹','我每次都收好了啊，只是你們不知道我收在哪裡！']];
+  $('bubbles').innerHTML=lines.map((l,i)=>`<div class="bub" style="animation-delay:${.3+i*.45}s"><span>${l[0]}</span>「${l[1]}」</div>`).join('')}
+
+/* M1 */
+function renderRoles(){$('roles').innerHTML=ROLE_KEYS.map(k=>{const r=ROLES[k];return `<div>
+ <div class="flip" data-flip="${k}"><div class="flip-in">
+  <div class="face front" style="background:${r.color}"><div class="emo">${r.emo}</div><b style="font-size:20px">${r.who}</b><small>${r.age} 歲・點我翻開</small></div>
+  <div class="face back"><span class="tag" style="background:${r.color}">${r.who}・${r.age}歲</span><h4>${r.name}：${r.title}</h4><p>${r.desc}</p><p><b>個人需求：</b>${r.need}</p><p class="must"><b>不能妥協：</b>${r.must}</p><p class="line">${r.line}</p></div>
+ </div></div>
+ <label class="spoke"><input type="checkbox" data-spoke="${k}" ${S.spoke[k]?'checked':''}> 已發言</label></div>`}).join('');
+ document.querySelectorAll('[data-flip]').forEach(f=>f.onclick=()=>f.classList.toggle('open'));
+ document.querySelectorAll('[data-spoke]').forEach(c=>c.onchange=()=>{S.spoke[c.dataset.spoke]=c.checked;save();checkM1()})}
+function renderConf(){const opts=v=>`<option value="">選角色</option>`+ROLE_KEYS.map(k=>`<option value="${k}" ${v===k?'selected':''}>${ROLES[k].who}</option>`).join('')+`<option value="all" ${v==='all'?'selected':''}>全家</option>`;
+ $('conf').innerHTML=S.conf.map((c,i)=>`<div class="confrow"><select data-ci="${i}" data-f="a">${opts(c.a)}</select><span class="x" style="text-align:center">↔</span><select data-ci="${i}" data-f="b">${opts(c.b)}</select><input data-ci="${i}" data-f="t" value="${esc(c.t)}" placeholder="衝突在哪裡？"></div>`).join('');
+ $('conf').querySelectorAll('[data-ci]').forEach(el=>el.oninput=el.onchange=()=>{S.conf[el.dataset.ci][el.dataset.f]=el.value;save();checkM1()})}
+$('addConf').onclick=()=>{S.conf.push({a:'',b:'',t:''});save();renderConf()};
+$('peek').onclick=()=>$('peekBox').classList.toggle('on');
+function checkM1(){const sp=ROLE_KEYS.filter(k=>S.spoke[k]).length;const cf=S.conf.filter(c=>c.a&&c.b&&c.a!==c.b&&c.t.trim()).length;
+ $('m1msg').textContent=`已發言 ${sp}/5・衝突 ${cf}/2`;$('m1next').disabled=!(sp===5&&cf>=2)}
+$('m1next').onclick=()=>{S.done.m1=1;save();go('m2')};
+
+/* placement engine */
+let sel=null; // {id, from:'tray'|slotId, mode}
+function placeMap(mode){return mode===3?S.place3:S.place}
+function slotOf(map,id){return Object.keys(map).find(s=>map[s]===id)}
+function canGo(itemId,slot,mode){const it=ITEMS[itemId];if(slot.z==='A'&&!it.hook)return false;return true}
+function issues(map,mode){ // returns {slot:{lvl,msg}} and per-role checks
+ const at=id=>{const s=slotOf(map,id);return s?SLOTS.find(x=>x.id===s):null};
+ const per={};const mark={};const add=(r,lvl,msg,slot)=>{(per[r]=per[r]||[]).push({lvl,msg});if(slot){const cur=mark[slot];if(!cur||lvl==='bad')mark[slot]=lvl}};
+ // grandma
+ ['07','08'].forEach(id=>{const s=at(id);if(s&&s.z==='D')add('grandma','bad',`${ITEMS[id].n}放在高櫃，奶奶每天都要拿！`,s.id)});
+ {const s=at('09');if(s&&s.z==='D')add('grandma','warn','手工材料放高櫃：一週拿好幾次，誰幫奶奶拿？',s.id)}
+ if(mode===3)['07','08','09'].forEach(id=>{const s=at(id);if(s&&s.low)add('grandma','bad',`${ITEMS[id].n}在低櫃下層，奶奶現在不能彎腰。`,s.id)});
+ // dad
+ ['10','11'].forEach(id=>{const s=at(id);if(s&&s.z==='D')add('dad','bad',`${ITEMS[id].n}放高櫃，開會前要搬椅子拿？`,s.id)});
+ {const s=at('12');if(s&&s.z==='D')add('dad','bad','充電器放高櫃，每天都要用耶！',s.id)}
+ // mom
+ {const s=at('06');if(s&&s.z==='D')add('mom','bad','鑰匙放高櫃，趕出門時拿不到！',s.id);else if(s&&s.z!=='A')add('mom','warn','鑰匙放在櫃格裡：要怎麼標示，全家才知道在哪？',s.id)}
+ ['02','05'].forEach(id=>{const s=at(id);if(s&&s.z==='D')add('mom','warn',`${ITEMS[id].n}放高櫃，出門前不好拿。`,s.id)});
+ {const s=at('03');if(s&&s.z==='D')add('dad','warn','背包放高櫃，每天出門不方便。',s.id)}
+ // bro
+ {const s=at('15');if(s&&s.z!=='C')add('bro','warn','模型不在書架上：哥哥的展示空間在哪裡？',s.id)}
+ ['04','13'].forEach(id=>{const s=at(id);if(s&&s.z==='D')add('bro','warn',`${ITEMS[id].n}每天要用，放高櫃要說得出理由。`,s.id)});
+ {const s=at('14');if(s&&s.z==='D')add('bro','warn','畫具放高櫃：哥哥 14 歲搆得到，但拿取要多一步。',s.id)}
+ // sis
+ ['16','17','18'].forEach(id=>{const s=at(id);if(s&&s.z==='D')add('sis','bad',`${ITEMS[id].n}放高櫃，妹妹拿不到也收不回去！`,s.id)});
+ // frequency
+ ['19','20'].forEach(id=>{const s=at(id);if(s&&s.z==='B')add('all','warn',`${ITEMS[id].n}很少用，卻占了低櫃的黃金位置。`,s.id)});
+ return {per,mark}
+}
+function itemChip(id,mode){const it=ITEMS[id];const on=sel&&sel.id===id;return `<button class="chip ${on?'sel':''}" data-item="${id}" data-mode="${mode}"><span class="e">${it.e}</span><span><b>${id}</b> ${it.n}<small><i class="dot" style="background:${OWNER_COLOR(it.o)}"></i> ${OWNER_NAME(id)}／${it.f}</small></span></button>`}
+function slotHTML(s,map,mark,mode){const id=map[s.id];const blocked=mode===3&&s.low;
+ let cls='slot'+(id?' filled':'')+(blocked?' blocked':'');
+ if(id&&mark[s.id])cls+=' '+mark[s.id];
+ if(sel&&!id){cls+=canGo(sel.id,s,mode)?' target':' nope'}
+ if(sel&&sel.from===s.id)cls+=' sel';
+ const inner=id?`<span class="e">${ITEMS[id].e}</span><span class="n">${id} ${ITEMS[id].n}</span>`:`${s.label}${blocked?'<br>奶奶不能彎腰':''}`;
+ return `<div class="${cls}" data-slot="${s.id}" data-mode="${mode}" title="${s.label}">${inner}</div>`}
+function planHTML(map,mark,mode){const z=k=>SLOTS.filter(s=>s.z===k);const sh=(arr)=>arr.map(s=>slotHTML(s,map,mark,mode)).join('');
+ return `<div class="entry">
+   <div class="zone"><h4>A 玄關鞋櫃 <small>8 格・已放滿</small></h4><div class="shoe">${'<div>👟</div>'.repeat(8)}</div><p style="font-size:11px;color:var(--sub);margin-top:4px">01 全家 8 雙日常鞋子</p></div>
+   <div class="zone"><h4>A 牆面掛鉤 <small>每個掛 1 件</small></h4><div class="slots s2">${sh(z('A'))}</div><p style="font-size:11px;color:var(--sub);margin-top:4px">只能掛外套、包包、雨傘、鑰匙</p></div>
+   <div class="door">🚪 大門</div>
+ </div>
+ <div class="walk-v"><span>主要通道・不可放物品</span></div>
+ <div class="living">
+   <div class="zone"><h4>D 高櫃 <small>🪜 需工具或請人協助</small></h4><div class="slots s2">${sh(z('D'))}</div></div>
+   <div class="zone"><h4>C 開放式書架 <small>好拿，但容易顯亂</small></h4><div class="shelfrow">上排</div><div class="slots s3">${sh(z('C').slice(0,3))}</div><div class="shelfrow">下排</div><div class="slots s3">${sh(z('C').slice(3))}</div></div>
+   <div class="walk-h">主要通道・不可放物品</div>
+   <div class="zone"><h4>B 客廳低櫃 <small>坐著也能拿</small></h4><div class="shelfrow">上層</div><div class="slots s3">${sh(z('B').slice(0,3))}</div><div class="shelfrow">下層（最底層）</div><div class="slots s3">${sh(z('B').slice(3))}</div></div>
+   <div class="furn"><b>🪑 共用桌 ＋ 茶几</b>爸爸工作、哥哥寫作業<br>只能暫放，不能固定收納<span style="font-size:26px">🛋️</span>奶奶的沙發座位</div>
+ </div>`}
+function checksHTML(per){const rows=[];ROLE_KEYS.concat(['all']).forEach(k=>{const list=per[k]||[];const nm=k==='all'?'🏠 全家':ROLES[k].emo+' '+ROLES[k].who;
+   if(!list.length){if(k!=='all')rows.push(`<div class="ck ok"><i>✅</i><span><b>${nm}</b>：可以接受！</span></div>`)}
+   else list.forEach(x=>rows.push(`<div class="ck ${x.lvl}"><i>${x.lvl==='bad'?'❌':'⚠️'}</i><span><b>${nm}</b>：${x.msg}</span></div>`))});return rows.join('')}
+function bindPlan(container,mode,rerender){container.querySelectorAll('[data-slot]').forEach(el=>el.onclick=()=>{
+   const map=placeMap(mode);const sid=el.dataset.slot;const s=SLOTS.find(x=>x.id===sid);const occ=map[sid];
+   if(sel){ if(sel.from===sid){sel=null;rerender();return}
+     if(!canGo(sel.id,s,mode)){toast('掛鉤只能掛外套、包包、雨傘或鑰匙');return}
+     if(occ){ // swap
+       if(sel.from!=='tray'){const fs=SLOTS.find(x=>x.id===sel.from);if(!canGo(occ,fs,mode)){toast('這兩個不能互換：掛鉤放不下');return}map[sel.from]=occ}else{}
+       if(sel.from==='tray'){toast(`${ITEMS[occ].n} 回到物品區`)}
+     } else if(sel.from!=='tray') delete map[sel.from];
+     map[sid]=sel.id; sel=null; save(); rerender(); return}
+   if(occ){sel={id:occ,from:sid};rerender()} });
+ }
+function bindTray(container,mode,rerender){container.querySelectorAll('[data-item]').forEach(el=>el.onclick=()=>{const id=el.dataset.item;sel=(sel&&sel.id===id)?null:{id,from:'tray'};rerender()})}
+
+function guideText(map,per){const unplaced=Object.keys(ITEMS).filter(id=>!slotOf(map,id)).length;const bad=Object.values(per).flat().filter(x=>x.lvl==='bad').length;
+ if(sel&&sel.from==='tray')return `👉 <b>第 2 步</b>：你拿著「${ITEMS[sel.id].e} ${ITEMS[sel.id].n}」，現在點平面圖上<b>綠色的空格</b>放進去。（再點一次物品卡可以取消）`;
+ if(sel)return `🔁 你拿起了「${ITEMS[sel.id].e} ${ITEMS[sel.id].n}」：點<b>空格</b>搬過去、點<b>另一個物品</b>互換，或按<b>「↩ 放回物品區」</b>。再點它一次可以取消。`;
+ if(unplaced)return `👆 <b>第 1 步</b>：點一張物品卡把它拿起來。還有 <b>${unplaced}</b> 組物品沒有家。`;
+ if(bad)return `❌ 東西都放好了，但還有 <b>${bad}</b> 個紅燈。看「家人的心聲」，點那個物品把它搬到別的地方。`;
+ return `✅ 太好了，沒有紅燈！${S.screen==='m2'?'往下捲，選出<b>最難安排的三組物品</b>，再寫下各區的理由。':'記得至少調整兩項，並寫下誰要改變習慣。'}`}
+$('helpBtn').onclick=()=>$('help').classList.add('on');
+$('helpClose').onclick=()=>$('help').classList.remove('on');
+$('help').onclick=e=>{if(e.target.id==='help')$('help').classList.remove('on')};
+
+/* M2 */
+function renderM2(){const map=S.place;const {per,mark}=issues(map,2);
+ $('plan').innerHTML=planHTML(map,mark,2);
+ const unplaced=Object.keys(ITEMS).filter(id=>!slotOf(map,id));
+ $('tray').innerHTML=unplaced.length?unplaced.map(id=>itemChip(id,2)).join(''):'<p class="hint">🎉 所有物品都有位置了！看看右下角家人是否都能接受。</p>';
+ $('left').textContent=`還剩 ${unplaced.length} 組`;
+ $('unplace').style.display=sel&&sel.from!=='tray'?'inline-block':'none';
+ $('checks').innerHTML=checksHTML(per);$('guide2').innerHTML=guideText(map,per);
+ bindPlan($('plan'),2,renderM2);bindTray($('tray'),2,renderM2);
+ $('hard3').innerHTML=Object.keys(ITEMS).map(id=>`<button data-h="${id}" class="${S.hard.includes(id)?'on':''}">${ITEMS[id].e} ${id} ${ITEMS[id].n}</button>`).join('');
+ $('hard3').querySelectorAll('[data-h]').forEach(b=>b.onclick=()=>{const id=b.dataset.h;if(S.hard.includes(id))S.hard=S.hard.filter(x=>x!==id);else{if(S.hard.length>=3){toast('最多選三組');return}S.hard.push(id)}save();renderM2()});
+ if(!$('reasons').dataset.built){$('reasons').innerHTML=['A','B','C','D'].map(z=>`<label><b style="font-size:14px;color:var(--green)">${ZNAME[z]}</b><textarea data-r="${z}" placeholder="為什麼這樣放？">${esc(S.reasons[z])}</textarea></label>`).join('');$('reasons').dataset.built=1;
+   $('reasons').querySelectorAll('[data-r]').forEach(t=>t.oninput=()=>{S.reasons[t.dataset.r]=t.value;save()})}
+ const bad=Object.values(per).flat().filter(x=>x.lvl==='bad').length;const warn=Object.values(per).flat().filter(x=>x.lvl==='warn').length;
+ let msg=unplaced.length?`還有 ${unplaced.length} 組物品沒有家`:bad?`還有 ${bad} 項「不能妥協」沒顧到`:S.hard.length<3?`再選 ${3-S.hard.length} 組最難安排的物品`:`✅ 可以了！${warn?`有 ${warn} 個黃燈，發表時要說明理由`:''}`;
+ $('m2msg').textContent=msg;$('m2next').disabled=!(unplaced.length===0&&bad===0&&S.hard.length===3)}
+$('unplace').onclick=()=>{if(sel&&sel.from!=='tray'){delete S.place[sel.from];sel=null;save();renderM2()}};
+$('m2next').onclick=()=>{S.done.m2=1;S.snap=Object.assign({},S.place);if(!S.place3)S.place3=Object.assign({},S.place);save();confetti();go('m3')};
+
+/* M3 */
+$('envelope').onclick=()=>{S.eventOpen=true;if(!S.place3)S.place3=Object.assign({},S.place);if(!S.snap)S.snap=Object.assign({},S.place);save();renderM3();toast('🚨 家裡有新消息！')};
+function renderM3(){$('sealed').style.display=S.eventOpen?'none':'block';$('eventArea').style.display=S.eventOpen?'block':'none';
+ if(!S.eventOpen){$('m3next').disabled=true;$('m3msg').textContent='';return}
+ const map=S.place3;const {per,mark}=issues(map,3);
+ $('plan3').innerHTML=planHTML(map,mark,3);
+ const unplaced=Object.keys(ITEMS).filter(id=>!slotOf(map,id));
+ $('tray3').innerHTML=unplaced.length?unplaced.map(id=>itemChip(id,3)).join(''):'<p class="hint">點平面圖上的物品，就可以搬到別的位置或互換。</p>';
+ $('unplace3').style.display=sel&&sel.from!=='tray'?'inline-block':'none';
+ $('checks3').innerHTML=checksHTML(per);$('guide3').innerHTML=guideText(map,per);
+ bindPlan($('plan3'),3,renderM3);bindTray($('tray3'),3,renderM3);
+ const changed=Object.keys(ITEMS).filter(id=>slotOf(S.snap,id)!==slotOf(map,id));
+ $('diff').innerHTML=changed.length?changed.map(id=>`<div>${ITEMS[id].e} ${ITEMS[id].n}：${lab(slotOf(S.snap,id))} → <b>${lab(slotOf(map,id))}</b></div>`).join(''):'<div class="muted">還沒有調整</div>';
+ $('habit').value=S.habit;
+ const bad=Object.values(per).flat().filter(x=>x.lvl==='bad').length;
+ $('m3msg').textContent=unplaced.length?`還有 ${unplaced.length} 組沒放回`:bad?`還有 ${bad} 項不能妥協沒顧到`:changed.length<2?`至少調整兩項（目前 ${changed.length}）`:!S.habit.trim()?'寫下誰要配合改變習慣':'✅ 調整完成！';
+ $('m3next').disabled=!(unplaced.length===0&&bad===0&&changed.length>=2&&S.habit.trim())}
+$('habit').oninput=()=>{S.habit=$('habit').value;save();renderM3();$('habit').focus();const v=$('habit');v.selectionStart=v.selectionEnd=v.value.length};
+$('unplace3').onclick=()=>{if(sel&&sel.from!=='tray'){delete S.place3[sel.from];sel=null;save();renderM3()}};
+$('m3next').onclick=()=>{S.done.m3=1;save();go('m4')};
+function lab(sid){if(!sid)return '物品區';const s=SLOTS.find(x=>x.id===sid);return ZNAME[s.z].split(' ')[0]+' '+s.label}
+
+/* M4 */
+['pr1','pr2','hardest'].forEach(k=>{$(k).value=S[k]||'';$(k).oninput=()=>{S[k]=$(k).value;save()}});
+$('m4next').onclick=()=>{S.done.m4=1;save();confetti();go('summary')};
+
+/* summary */
+function finalMap(){return S.place3&&S.eventOpen?S.place3:S.place}
+function renderSummary(){const map=finalMap();
+ const zoneItems=z=>SLOTS.filter(s=>s.z===z&&map[s.id]).map(s=>`${ITEMS[map[s.id]].e} ${map[s.id]} ${ITEMS[map[s.id]].n}<span class="muted">（${s.label}）</span>`).join('<br>')||'—';
+ const conf=S.conf.filter(c=>c.a&&c.b&&c.t).map(c=>`${nm(c.a)} ↔ ${nm(c.b)}：${esc(c.t)}`).join('<br>')||'—';
+ const changed=S.snap?Object.keys(ITEMS).filter(id=>slotOf(S.snap,id)!==slotOf(map,id)).map(id=>`${ITEMS[id].n}：${lab(slotOf(S.snap,id))} → ${lab(slotOf(map,id))}`).join('<br>'):'—';
+ $('summary').innerHTML=`<p class="sentence" style="line-height:1.8;margin-bottom:16px">我們這一家最重要的收納原則是<b style="color:var(--leaf)">「${esc(S.pr1)||'＿＿'}」</b>，因為${esc(S.pr2)||'＿＿'}。</p>
+ <table class="sumtbl"><tr><th style="width:22%">收納區</th><th>放了哪些物品</th><th style="width:34%">安排的理由</th></tr>
+ <tr><td>A 玄關</td><td>👟 01 八雙日常鞋子（鞋櫃）<br>${zoneItems('A')}</td><td>${esc(S.reasons.A)}</td></tr>
+ ${['B','C','D'].map(z=>`<tr><td>${ZNAME[z]}</td><td>${zoneItems(z)}</td><td>${esc(S.reasons[z])}</td></tr>`).join('')}</table>
+ <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:16px">
+  <div><h3>🔥 需求衝突</h3><p style="font-size:14px">${conf}</p></div>
+  <div><h3>🧩 最難安排</h3><p style="font-size:14px">${S.hard.map(id=>ITEMS[id].e+' '+ITEMS[id].n).join('、')||'—'}</p></div>
+  <div><h3>🚨 事件後的調整</h3><p style="font-size:14px">${changed||'—'}</p><p style="font-size:14px;margin-top:4px"><b>配合改變：</b>${esc(S.habit)||'—'}</p></div>
+  <div><h3>🤝 最困難的協商</h3><p style="font-size:14px">${esc(S.hardest)||'—'}</p></div>
+ </div>`;S.done.summary=1;save();renderSteps()}
+function nm(k){return k==='all'?'全家':ROLES[k].who}
+$('copy').onclick=()=>{const t=$('summary').innerText;const ok=()=>toast('已複製成果文字');
+ if(navigator.clipboard)navigator.clipboard.writeText(t).then(ok,fallback);else fallback();
+ function fallback(){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok()}catch(e){toast('請手動選取複製')}a.remove()}};
+
+/* photo */
+function renderPhoto(){const map=finalMap();const mode=S.eventOpen?3:2;const keep=sel;sel=null;const {per}=issues(map,mode);
+ const d=new Date();const ds=`${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`;
+ $('photoCard').innerHTML=`<div class="ph-top"><div><p class="eyebrow">我們這一家｜收納大作戰・成果</p><h1>${esc(S.gname)||'我們這一家'}</h1></div><p class="muted" style="font-size:14px">${ds}${S.eventOpen?'・已因應「奶奶受傷」調整':''}</p></div>
+ <div class="ph-pr">我們最重要的收納原則是<b style="color:var(--leaf)">「${esc(S.pr1)||'＿＿'}」</b>，因為${esc(S.pr2)||'＿＿'}。</div>
+ <div class="plan">${planHTML(map,{},mode)}</div>
+ <div class="ph-roles">${ROLE_KEYS.map(k=>{const l=per[k]||[];const st=l.some(x=>x.lvl==='bad')?'❌':l.length?'⚠️ 有條件接受':'✅ 可以接受';return `<div class="ph-role"><b>${ROLES[k].emo} ${ROLES[k].who}</b>${st}</div>`}).join('')}</div>
+ ${S.hardest?`<p style="margin-top:12px;font-size:14px"><b style="color:var(--green)">🤝 最困難的協商：</b>${esc(S.hardest)}</p>`:''}`;
+ sel=keep;S.done.photo=1;save();renderSteps()}
+$('gname').oninput=()=>{S.gname=$('gname').value;save();renderPhoto()};
+$('shot').onclick=async()=>{if(typeof html2canvas==='undefined'){toast('截圖工具沒載入，請直接用手機截圖');return}
+ $('shot').disabled=true;$('shot').textContent='產生中…';
+ try{const c=await html2canvas($('photoCard'),{scale:2,backgroundColor:'#F6F8F2',useCORS:true});const url=c.toDataURL('image/png');
+  $('shotImg').src=url;$('shotOut').style.display='block';
+  const a=document.createElement('a');a.href=url;a.download=`我們這一家_${S.gname||'成果'}.png`;document.body.appendChild(a);a.click();a.remove();confetti();toast('📸 成果圖已產生！')}
+ catch(e){toast('產生失敗，請直接用手機截圖')}
+ $('shot').disabled=false;$('shot').textContent='⬇️ 下載成果圖'};
+
+$('resetAll').onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()};
+function esc(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+renderIntro();renderRoles();renderConf();checkM1();go(S.screen||'intro');
+</script>
+</body>
+</html>
